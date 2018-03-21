@@ -51,8 +51,8 @@ for i = 1:length(files)
         diam = measurements.MajorAxisLength * mm_per_pixel;
         
         % Compute mean, standard deviation, and range of channels
-        feature_vec = colorStatsRGB(r, g, b, feature_vec, i);
-        feature_vec = colorStatsHSI(r, g, b, feature_vec, i);
+        feature_vec = colorStatsRGB([r g b], feature_vec, i);
+        feature_vec = colorStatsHSI([r g b], feature_vec, i);
 
 
     end
