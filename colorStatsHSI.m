@@ -1,10 +1,10 @@
 function feature_vec = colorStatsHSI(img, feature_vec, i)
-% 14. Mean of Hue (H)
-% 15. Mean of Saturation (S)
-% 16. Mean of Intensity (I)
-% 17. Standard deviation of Hue (H)
-% 18. Standard deviation of Saturation (S)
-% 19. Standard deviation of Intensity (I)
+% 13. Mean of Hue (H)
+% 14. Mean of Saturation (S)
+% 15. Mean of Intensity (I)
+% 16. Standard deviation of Hue (H)
+% 17. Standard deviation of Saturation (S)
+% 18. Standard deviation of Intensity (I)
 img = double(img)/255;
 R=img(:,:,1);
 G=img(:,:,2);
@@ -20,9 +20,6 @@ H=acosd(Htop./(Hbottom+0.000001));
 H(B>G)=360-H(B>G);
 %Normalize to the range [0 1]
 H=H/360;
-
-
-
 %% Saturation
 S = 1 - (3./(sum(img,3)+0.000001)).*min(img,[],3);
 
@@ -30,12 +27,12 @@ S = 1 - (3./(sum(img,3)+0.000001)).*min(img,[],3);
 I=sum(img,3)./3;
 
 %% Feature vector
-feature_vec(i,14) = mean(H(:));
-feature_vec(i,17) = std(H(:));
-feature_vec(i,15) = mean(S(:));
-feature_vec(i,18) = std(S(:));
-feature_vec(i,16) = mean(I(:));
-feature_vec(i,19) = std(I(:));
+feature_vec(i,13) = mean(H(:));
+feature_vec(i,16) = std(H(:));
+feature_vec(i,14) = mean(S(:));
+feature_vec(i,16) = std(S(:));
+feature_vec(i,15) = mean(I(:));
+feature_vec(i,18) = std(I(:));
 
 end
 

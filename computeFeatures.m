@@ -3,30 +3,28 @@ files = dir(src_folder);
 mm_per_pixel = 0.0706;
 
 % Initialize feature vector
-feature_vec = zeros(length(files),20);
+feature_vec = zeros(length(files),19);
 % 1. Area
-% 2. Roundness
-% 3. Circularity
-% 4. Diameter
-% 5. Mean R channel intensity
-% 6. Mean G channel intensity 
-% 7. Mean B channel intensity
-% 8. Standard deviation of R channel
-% 9. Standard deviation of G channel
-% 10. Standard deviation of B channel
-% 11. Range of R channel
-% 12. Range of G channel
-% 13. Range of B channel
-% 14. Mean of Hue (H)
-% 15. Mean of Saturation (S)
-% 16. Mean of Intensity (I)
-% 17. Standard deviation of Hue (H)
-% 18. Standard deviation of Saturation (S)
-% 19. Standard deviation of Intensity (I)
-% 20. Number of blemishes
-% 21. Average size of blemishes
+% 2. Circularity
+% 3. Diameter
+% 4. Mean R channel intensity
+% 5. Mean G channel intensity 
+% 6. Mean B channel intensity
+% 7. Standard deviation of R channel
+% 8. Standard deviation of G channel
+% 9. Standard deviation of B channel
+% 10. Range of R channel
+% 11. Range of G channel
+% 12. Range of B channel
+% 13. Mean of Hue (H)
+% 14. Mean of Saturation (S)
+% 15. Mean of Intensity (I)
+% 16. Standard deviation of Hue (H)
+% 17. Standard deviation of Saturation (S)
+% 18. Standard deviation of Intensity (I)
+% 19. Percentage of blemished skin 
 
-for i = 1:length(files)
+for i = 20:length(files)
     % Print image number
     i
     if contains(files(i).name, 'JPG')
@@ -52,8 +50,9 @@ for i = 1:length(files)
         feature_vec = colorStatsHSI(img, feature_vec, i);
         
         % Compute number of defects 
-        feature_vec = defectFinder(r, g, b, feature_vec, img,i);
+        feature_vec = defectFinder(r, g, b, feature_vec, img,i, mask);
 
 
     end
+    save('feature_vec')
 end
