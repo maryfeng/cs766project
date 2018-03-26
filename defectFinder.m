@@ -8,13 +8,13 @@ b = imgaussfilt(b,7);
 R = double(r);
 G = double(g);
 B = double(b);
-figure; colormap(gray)
-subplot(2,3,1); hist(R(R~=0),100);
-subplot(2,3,2); hist(G(G~=0),100);
-subplot(2,3,3); hist(B(B~=0),100);
-subplot(2,3,4); imshow(r);
-subplot(2,3,5); imshow(g);
-subplot(2,3,6); imshow(b)
+% figure; colormap(gray)
+% subplot(2,3,1); hist(R(R~=0),100);
+% subplot(2,3,2); hist(G(G~=0),100);
+% subplot(2,3,3); hist(B(B~=0),100);
+% subplot(2,3,4); imshow(r);
+% subplot(2,3,5); imshow(g);
+% subplot(2,3,6); imshow(b)
 
 %% Find dark blemishes in red channel
 red_avg = mean(r(r~=0));
@@ -32,9 +32,9 @@ dark_spots = imdilate(dark_spots,se);
 [labeled_img, nspots] = bwlabel(dark_spots);
 
 % Remove calyx and if perimeter left in binarized image
-for i = 1:nspots
+for k = 1:nspots
    spot = labeled_img;
-   spot(spot ~= i) = 0;
+   spot(spot ~= k) = 0;
    
    m = regionprops(spot, 'Centroid', 'MajorAxisLength', 'MinorAxisLength');
    for j = 1:length(m)
@@ -48,25 +48,18 @@ for i = 1:nspots
    % If line-like like perimeter, remove segment
    roundness = m.MinorAxisLength/m.MajorAxisLength;
    if dist < 85 && roundness > 0.5
-       labeled_img(labeled_img == i) = 0;
+       labeled_img(labeled_img == k) = 0;
    elseif roundness < 0.1 || sum(spot(:))<40
-       labeled_img(labeled_img == i) = 0;
+       labeled_img(labeled_img == k) = 0;
    end
 end
 percent_blemished = sum(sum(labeled_img ~= 0))/sum(mask(:));
+feature_vec(i,19) = percent_blemished;
 
-maxg = max(g(:));
-d = g;
-d(d<0.85*maxg) = 0;
-
-
-maxb = max(b(:));
-c = b; 
-c(c<0.8*maxb) = 0;
-
-figure; 
-subplot(1,4,1); imshow(labeled_img);
-subplot(1,4,2); imshow(d);
-subplot(1,4,3); imshow(c);
-subplot(1,4,4); imshow(img)
+% 
+% figure; 
+% subplot(1,4,1); imshow(labeled_img);
+% subplot(1,4,2); imshow(d);
+% subplot(1,4,3); imshow(c);
+% subplot(1,4,4); imshow(img)
 end

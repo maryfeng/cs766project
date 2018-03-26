@@ -24,7 +24,7 @@ feature_vec = zeros(length(files),19);
 % 18. Standard deviation of Intensity (I)
 % 19. Percentage of blemished skin 
 
-for i = 20:length(files)
+for i = 1:length(files)
     % Print image number
     i
     if contains(files(i).name, 'JPG')
@@ -54,5 +54,5 @@ for i = 20:length(files)
 
 
     end
-    save('feature_vec')
 end
+save('feature_vec')

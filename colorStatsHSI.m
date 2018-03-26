@@ -30,7 +30,7 @@ I=sum(img,3)./3;
 feature_vec(i,13) = mean(H(:));
 feature_vec(i,16) = std(H(:));
 feature_vec(i,14) = mean(S(:));
-feature_vec(i,16) = std(S(:));
+feature_vec(i,17) = std(S(:));
 feature_vec(i,15) = mean(I(:));
 feature_vec(i,18) = std(I(:));
 
