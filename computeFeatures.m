@@ -1,4 +1,5 @@
-src_folder = 'Orange Photos Edited';
+function feature_vec = computeFeatures(src_folder)
+
 files = dir(src_folder);
 % Remove unwanted files from dir
 files = files(~ismember({files.name},{'.','..','.DS_Store'}));
@@ -34,5 +35,5 @@ for i = 1:length(files)
     % Compute number of defects
     feature_vec = defectFinder(r, g, b, feature_vec, img,i, mask);
 end
-save('feature_vec')
-
+%save('feature_vec')
+end
