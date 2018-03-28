@@ -16,20 +16,25 @@ B = double(b);
 % subplot(2,3,5); imshow(g);
 % subplot(2,3,6); imshow(b)
 
-%% Find dark blemishes in red channel
+%% Find dark blemishes in red channel, light spots in blue channel
 red_avg = mean(r(r~=0));
 dark_spots = r;
 dark_spots(dark_spots > red_avg) = 0;
 dark_spots = imbinarize(dark_spots);
+blue_avg = mean(b(b~=0));
+light_spots = b;
+light_spots(light_spots < 1.75*blue_avg) = 0;
+light_spots = imbinarize(light_spots);
+spots = dark_spots + light_spots;
 % Remove perimeter from binarized image
 perim = bwperim(mask);
 se = strel('sphere',16);
 perim = imdilate(perim,se);
-dark_spots = dark_spots .* ~perim;
+spots = spots .* ~perim;
 % Dilate slightly to connect small components
 se = strel('sphere',2);
-dark_spots = imdilate(dark_spots,se);
-[labeled_img, nspots] = bwlabel(dark_spots);
+spots = imdilate(spots,se);
+[labeled_img, nspots] = bwlabel(spots);
 
 % Remove calyx and if perimeter left in binarized image
 for k = 1:nspots
@@ -47,7 +52,11 @@ for k = 1:nspots
    dist = sqrt((500-m.Centroid(1))^2 + (500-m.Centroid(2))^2);
    % If line-like like perimeter, remove segment
    roundness = m.MinorAxisLength/m.MajorAxisLength;
-   if dist < 85 && roundness > 0.5
+   % If spot is close to center, round, and fairly small (less than 3% of 
+   % total mask), consider it the calyx and remove from 
+   % consideration as a blemish
+   if dist < 85 && roundness > 0.5 && ...
+           sum(sum(spot ~= 0))/sum(mask(:)) < 0.03
        labeled_img(labeled_img == k) = 0;
    elseif roundness < 0.1 || sum(spot(:))<40
        labeled_img(labeled_img == k) = 0;

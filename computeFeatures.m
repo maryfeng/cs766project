@@ -1,4 +1,4 @@
-src_folder = '/Users/Heather/Documents/GitHub/cs766project/Orange Photos Edited';
+src_folder = 'Orange Photos Edited';
 files = dir(src_folder);
 % Remove unwanted files from dir
 files = files(~ismember({files.name},{'.','..','.DS_Store'}));
