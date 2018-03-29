@@ -1,4 +1,3 @@
-% Not yet working
 function feature_vec = defectFinder(r, g, b, feature_vec, img, i, mask)
 close all;
 r = imgaussfilt(r,7);
@@ -16,7 +15,7 @@ B = double(b);
 % subplot(2,3,5); imshow(g);
 % subplot(2,3,6); imshow(b)
 
-%% Find dark blemishes in red channel, light spots in blue channel
+%% Find dark blemishes in red channel, light spots in saturation channel
 red_avg = mean(r(r~=0));
 dark_spots = r;
 dark_spots(dark_spots > red_avg) = 0;
@@ -27,11 +26,13 @@ hsv = rgb2hsv(img);
 s = hsv(:,:,2);
 s_avg = mean(s(s~=0));
 light_spots = s;
+% multiplier of 0.7 found to work well empirically
 light_spots(light_spots > 0.7*s_avg) = 0;
+light_spots = imbinarize(light_spots);
 %imshow(light_spots);
 
-% using green or blue channels
-% would need to distinguish between actual light spots vs shine/glare
+% attempts using green or blue channels
+% difficult to distinguish between actual light spots vs shine/glare
 %{
 green_avg = mean(g(g~=0));
 light_spots = g;
@@ -48,8 +49,9 @@ light_spots = imbinarize(light_spots);
 %imshow(light_spots);
 
 spots = dark_spots + light_spots;
-imwrite(light_spots, strcat(num2str(i),'_light.JPG'));
-imwrite(dark_spots, strcat(num2str(i),'_dark.JPG'));
+%imwrite(light_spots, strcat(num2str(i),'_light.JPG'));
+%imwrite(dark_spots, strcat(num2str(i),'_dark.JPG'));
+
 % Remove perimeter from binarized image
 perim = bwperim(mask);
 se = strel('sphere',16);
@@ -88,7 +90,7 @@ for k = 1:nspots
 end
 percent_blemished = sum(sum(labeled_img ~= 0))/sum(mask(:));
 feature_vec(i,19) = percent_blemished;
-imwrite(spots, strcat(num2str(i),'_spots.JPG'));
+%imwrite(labeled_img, strcat(num2str(i),'_blemished.JPG'));
 % 
 % figure; 
 % subplot(1,4,1); imshow(labeled_img);

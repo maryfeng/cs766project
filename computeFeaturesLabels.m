@@ -1,4 +1,6 @@
-dirs = dir('Graded_Oranges');
+function computeFeaturesLabels(directory)
+
+dirs = dir(directory);
 dirs = dirs(~ismember({dirs.name},{'.','..','.DS_Store'}));
 feature_vecs = cell(length(dirs),1);
 
@@ -9,4 +11,4 @@ for i = 1:length(dirs)
 end
 
 feature_vec_labels = cat(1,feature_vecs{:});
-save('feature_vec_labels','feature_vec_labels')
+save(strcat('feature_vec_labels_',directory),'feature_vec_labels')
