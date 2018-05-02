@@ -6,6 +6,7 @@ The quality of fruit is often associated with its outside appearance. The fruits
 
 ### Current State-of-the-art
 Although there are some papers which discuss automated fruit grading techniques using computer vision, implementation of this is more rare in industry. One example is Ellips, which is a Dutch company that uses size and color to determine quality. Compac, a New Zealand-based company, uses software to grade cherries. Many agricultural companies still rely on humans to grade produce. There are some machines available for sorting and grading based on physical characteristics such as shape, weight, and how the fruit rolls. It appears many companies capable of automated visual fruit grading are located outside the United States or work specifically for one kind of fruit. 
+
 There are several papers and companies that have implemented computer vision techniques with machine learning for orange grading. This includes classic machine learning algorithms involving some feature engineering, and more recently, deep learning methods for classification. 
 
 
