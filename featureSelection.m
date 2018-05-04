@@ -4,7 +4,6 @@
 % values of 10th feature was the same for all observations and classes, so
 % the 10th feature is dropped from consideration
 X = feature_vec_labels(:,[1:9 11:24]);
-Z = zscore(X);
 % labels
 Y = feature_vec_labels(:,25);
 labels = {'discount', 'sell', 'throwaway'};
