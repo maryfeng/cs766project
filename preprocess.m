@@ -1,20 +1,23 @@
+%% Remove background and crop orange photos
 close all;
-src_folder = '/Users/Heather/Documents/Orange Photos/';
-dest_folder = '/Users/Heather/Documents/Orange Photos Edited/';
+src_folder = '/Users/Heather/Desktop/photos/';
+dest_folder = '/Users/Heather/Desktop/photos edited/';
 files = dir(src_folder);
 mm_per_pixel = 0.0706;
 for i = 1:length(files)
     i
     if contains(files(i).name, 'JPG')
         img = imread([files(i).folder filesep files(i).name]);
-        r = img(:,:,1);
-        g = img(:,:,2);
-
+        r = img(:,:,1); %red channel
+       
         % Get mask from red channel
         mask = r;
+        % Binarize red channel to create mask
         mask(mask < 70) = 0;
         mask(mask ~= 0) = 1;
         mask = bwareaopen(mask,200);
+        mask = bwareafilt(mask,1); % Take largest component only
+        % Apply mask to image
         img = img(:,:,:) .* uint8(mask);
 
         % Find center to use for cropping

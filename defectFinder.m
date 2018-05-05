@@ -1,26 +1,17 @@
-function feature_vec = defectFinder(r, g, b, feature_vec, img, i, mask)
+function feature_vec = defectFinder(r, feature_vec, img, i, mask)
 close all;
-r = imgaussfilt(r,7);
-g = imgaussfilt(g,7);
-b = imgaussfilt(b,7);
 
-R = double(r);
-G = double(g);
-B = double(b);
-% figure; colormap(gray)
-% subplot(2,3,1); hist(R(R~=0),100);
-% subplot(2,3,2); hist(G(G~=0),100);
-% subplot(2,3,3); hist(B(B~=0),100);
-% subplot(2,3,4); imshow(r);
-% subplot(2,3,5); imshow(g);
-% subplot(2,3,6); imshow(b)
 
 %% Find dark blemishes in red channel, light spots in saturation channel
+% Apply smoothing filter to red channel
+r = imgaussfilt(r,7);
+% Binarize red channel 
 red_avg = mean(r(r~=0));
 dark_spots = r;
 dark_spots(dark_spots > red_avg) = 0;
 dark_spots = imbinarize(dark_spots);
 
+%% Find light blemishes using saturation channel of HSV
 % use saturation as metric of light spots
 hsv = rgb2hsv(img);
 s = hsv(:,:,2);
@@ -29,29 +20,9 @@ light_spots = s;
 % multiplier of 0.7 found to work well empirically
 light_spots(light_spots > 0.7*s_avg) = 0;
 light_spots = imbinarize(light_spots);
-%imshow(light_spots);
 
-% attempts using green or blue channels
-% difficult to distinguish between actual light spots vs shine/glare
-%{
-green_avg = mean(g(g~=0));
-light_spots = g;
-light_spots(light_spots < 1.3*green_avg) = 0;
-light_spots = imbinarize(light_spots);
-%}
-%imshow(light_spots);
-%{
-blue_avg = mean(b(b~=0));
-light_spots = b;
-light_spots(light_spots < 2*blue_avg) = 0;
-light_spots = imbinarize(light_spots);
-%}
-%imshow(light_spots);
-
+%% Combine dark & light defects and process
 spots = dark_spots + light_spots;
-%imwrite(light_spots, strcat(num2str(i),'_light.JPG'));
-%imwrite(dark_spots, strcat(num2str(i),'_dark.JPG'));
-
 % Remove perimeter from binarized image
 perim = bwperim(mask);
 se = strel('sphere',16);
@@ -88,13 +59,7 @@ for k = 1:nspots
        labeled_img(labeled_img == k) = 0;
    end
 end
+%% Add to feature vector 
 percent_blemished = sum(sum(labeled_img ~= 0))/sum(mask(:));
 feature_vec(i,19) = percent_blemished;
-%imwrite(labeled_img, strcat(num2str(i),'_blemished.JPG'));
-% 
-% figure; 
-% subplot(1,4,1); imshow(labeled_img);
-% subplot(1,4,2); imshow(d);
-% subplot(1,4,3); imshow(c);
-% subplot(1,4,4); imshow(img)
 end

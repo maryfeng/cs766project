@@ -1,3 +1,4 @@
+%% View all 3 image channels of oranges to determine best for classification
 folder = uigetdir();
 files = dir(folder);
 
